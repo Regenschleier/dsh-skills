@@ -83,7 +83,6 @@ ample space above the head and below the feet, vertical composition.
 
 ## 复现命令
 
-可用的 API JSON 骨架在另一个 skill 里：[`../../h3-image-workflow/references/api-graph.md`](../../h3-image-workflow/references/api-graph.md)
-（节点 `6` 是 MiniMaxH3ImageConditioning，`7` 是 LoadImage，`8` 是噪声，`15` 是保存）。
-改三处即可复现本页对照：`6.inputs.prompt`（换成上面对照写法）、`8.inputs.noise_seed`、`15.inputs.filename_prefix`；
-要「带参考图」就把 `"images.image_0": ["7", 0]` 留着、`"vae": ["5", 0]` 删掉；要「不带参考图」就连 `"images.image_0"` 一起删。
+本页所有对照都用同一张图跑的，那张图的唯一存档在 `h3-image-workflow` skill 里，不在这里重复第二份。
+要复现，改三处即可：提示词段（换成上面对照里的写法）、`noise_seed`、`filename_prefix`；
+带参考图与不带参考图的开关也在那份文件里写着。
