@@ -76,16 +76,24 @@ MiniMax H3 是其中一个模型，它有两种用法：
 
 ### 3.3 用 API 提交（不开界面也能跑）
 
-界面上连好线后，点右上角 `Save`，再用下面这行命令提交（PowerShell）：
+**先说一句容易踩的**：界面里「Save (API Format)」导出的文件是**裸节点表**，直接丢给 `/prompt` 会被拒，
+外面要包一层 `{"prompt": ...}`。
 
 ```powershell
-# 把 workflow_api.json 换成你导出的文件名；导出时要选「Export (API)」
-$json = Get-Content "workflow_api.json" -Raw -Encoding UTF8
-Invoke-RestMethod "http://127.0.0.1:8188/prompt" -Method Post -Body $json -ContentType "application/json"
+# nodes.json = 你的节点表（就是 API 格式导出出来的那个文件）
+$nodes = Get-Content "nodes.json" -Raw -Encoding UTF8 | ConvertFrom-Json
+$body  = @{ prompt = $nodes } | ConvertTo-Json -Depth 20 -Compress
+$cli = New-Object System.Net.WebClient
+$cli.Encoding = [System.Text.Encoding]::UTF8
+$cli.Headers.Add("Content-Type", "application/json")
+$cli.UploadString("http://127.0.0.1:8188/prompt", "POST", $body)
 ```
 
 返回一个 `prompt_id` → 用 `http://127.0.0.1:8188/history/<prompt_id>` 查结果，
 出图在 `...\ComfyUI-Shared\output\` 下，文件名前缀由 `SaveImage` 节点决定。
+
+> 注：本 skill 附带的 JSON 是 **API 格式**，它不能像普通工作流那样直接拖进画布（这点没验证过能拖进去，
+> 实际做法是要么在界面里手动连一次线，要么用上面的命令直接提交）。
 
 ---
 
@@ -102,15 +110,17 @@ Invoke-RestMethod "http://127.0.0.1:8188/prompt" -Method Post -Body $json -Conte
 
 ## 5. 报错对照表
 
+带 ✅ 的是我实际踩过并修好的；带 ⚠️ 的是按节点定义推断、**还没实测**，仅供参考。
+
 | 你看到的 | 意思 | 怎么办 |
 |---|---|---|
-| `execute() got an unexpected keyword argument 'image_0'` | API 里那个插槽的名字少写了 `images.` 前缀 | 改成 `"images.image_0": ["7", 0]` |
-| `Required input is missing: images` | 删键时删多了或拼错 | 只删 `images.image_0` 这一行 |
-| `CUDA out of memory` | 画布太大 | 宽高改成 768 / 1344；关掉别的占显卡软件 |
-| 图片全黑 / 全灰 | vae 接错节点 | `VAEDecode` 的 vae 必须接 |
-| 出图和参考图一模一样 | 提示词里写了 same close crop | 写明新的景别与机位 |
-| 换机位没用 | images 插槽还连着 | 断开 `images.image_0` |
-| 永远是真人脸 | vae 还连着 | 断开 `MiniMaxH3ImageConditioning` 的 vae |
+| ✅ `execute() got an unexpected keyword argument 'image_0'` | API 里那个插槽的名字少写了 `images.` 前缀 | 改成 `"images.image_0": ["7", 0]` |
+| ✅ 提交后提示缺少 `prompt` / 直接报错 | 把裸节点表直接 POST 了 | 外面包一层 `{"prompt": {...}}`（见 3.3） |
+| ⚠️ `CUDA out of memory` | 画布太大 | 宽高改成 768 / 1344；关掉别的占显卡软件 |
+| ⚠️ 图片全黑 / 全灰 | vae 可能接错节点 | 检查 `VAEDecode` 的 vae 是否接上 |
+| ✅ 出图和参考图一模一样 | 提示词里写了 same close crop | 写明新的景别与机位 |
+| ✅ 换机位没用 | images 插槽还连着 | 断开 `images.image_0` |
+| ✅ 永远是真人脸 | vae 还连着 | 断开 `MiniMaxH3ImageConditioning` 的 vae |
 
 ---
 
