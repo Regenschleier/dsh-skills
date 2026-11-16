@@ -63,10 +63,28 @@
 `MiniMaxH3ImageConditioning` 输出的 latent 是 `[1, 24, 1, h/16, w/16]` 的普通 samples，
 采样器 `SamplerCustomAdvanced` 吐出来的却是 AV 嵌套结构，所以要先拆一次、只取第 0 输出 `video_latent` 再解码。
 
-## 报错对照
+## 提交方式（这一步写错会直接被拒）
 
-| 报错 | 原因 | 改法 |
-|---|---|---|
-| `execute() got an unexpected keyword argument 'image_0'` | 槽位键少写了 `images.` 前缀 | 写成 `"images.image_0"` |
-| `Required input is missing: images` | 删键时把 `vae` 也删了 / 键名拼错 | 只删 `images.image_0` 这一条 |
-| 出图 1.8 MP、显存不足 | `width/height` 留 0，按参考图短边 1024 自动出画布 | 显式写 768×1344 |
+`POST /prompt` 的请求体必须是**包了一层 `prompt`** 的对象：
+
+```powershell
+# 把 nodes.json 换成你的节点表（就是下面这段 JSON 本身，或界面里「Save (API Format)」导出的文件）
+$nodes = Get-Content "nodes.json" -Raw -Encoding UTF8 | ConvertFrom-Json
+$body  = @{ prompt = $nodes } | ConvertTo-Json -Depth 20 -Compress
+[System.IO.File]::WriteAllText("$PWD\body.json", $body, (New-Object System.Text.UTF8Encoding($false)))
+$cli = New-Object System.Net.WebClient
+$cli.Encoding = [System.Text.Encoding]::UTF8
+$cli.Headers.Add("Content-Type", "application/json")
+$cli.UploadString("http://127.0.0.1:8188/prompt", "POST", (Get-Content "body.json" -Raw -Encoding UTF8))
+```
+
+界面导出的 API 文件是**裸节点表**，直接 POST 会报缺少 `prompt` 字段，所以要自己包一层。
+
+## 报错对照（只列实测过的）
+
+| 报错 / 现象 | 原因 | 改法 | 验证 |
+|---|---|---|---|
+| `execute() got an unexpected keyword argument 'image_0'. Did you mean 'images'?` | autogrow 槽位键少了 `images.` 前缀 | 写成 `"images.image_0"` | 实测 |
+| 请求被拒 / 提示缺少 `prompt` | 把裸节点表直接 POST 了 | 外面包一层 `{"prompt": {...}}` | 实测（本 skill 手册第一版就写错在这里） |
+| 出图约 1.8 MP，8 GB 卡爆显存 | `width/height` 留 0，按参考图短边 1024 自动出画布 | 显式写 768×1344 | 源码常量 `IMAGE_REF_SHORT_EDGE=1024` 推得，**未实测** |
+
