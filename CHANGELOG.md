@@ -53,3 +53,8 @@
 
 新增 `examples/`：9 张实拍对照图（5 成功 4 失败），每张下面写清配置、症状、病因与改法。
 
+
+**工作流文件去重（2026-11-17）**
+
+- 新增 `skills/h3-image-workflow/references/api-graph.json`：实跑过的 14 节点图，只留占位值，可直接 POST。
+- `api-graph.md` 正文里那份重复的 JSON 删掉，改成指向该文件 + 一张节点清单表，避免两处不一致。
