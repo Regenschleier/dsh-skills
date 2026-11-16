@@ -82,8 +82,7 @@ two-dimensional anime artwork.
 | 「场景」「背景图」「环境」 | 无人的场景图 | 广角、无人、无故事设定形容词 |
 
 用户没说清时，先问一句「要单张人像，还是要三视图资产图」，不要自己猜。
-参考文档里这套「先判模式、再套模板」的分发法可以借用；但本机只验证过**单幅人像**与**景别锚点**两件事，
-三视图那条本机未验证（见第十一节）。
+参考文档里这套「先判模式、再套模板」的分发法可以借用；本机已实测的是**单幅人像**、**景别锚点**与**横排三视图**（见第十一节）。
 
 > 本文的标注约定：写了 seed 与对照图的是**已实测**；写「未验证 / 推断」的是**没跑过**，
 > 别当成事实引用。
@@ -107,17 +106,33 @@ two-dimensional anime artwork.
 两条纪律：
 
 1. **参考图没拍到的地方，可以补全，但不能说「参考图证实了」**。背面、后腰、鞋靴这类没入镜的，按正面设计克制补全，并在给用户的话里注明是补的。
-2. **同一角色要用同一句锚**（`the same character` 或逐条重述同一组锚点）。只写「同一个人」这种抽象词，多视图之间会换脸。
-   — 这条来自参考文档的经验，**本机没做过多视图对照，属推断**；要用就先跑一组对照再当结论。
+2. **同一角色要用同一句锚**。本机已验证的一半是：**只写一份人物描述、跑三视图，出来的确是同一个角色**
+   （见 `examples/success-07-three-view-turnaround.jpg`）；反过来的对照组（只写「the same character」而不重述锚点）
+   **本机没跑过**，所以「会换脸」这句仍是参考文档的经验、标为推断。
 
-## 十一、多视图资产图（本机未验证，标注清楚）
+## 十一、多视图资产图（已实测：1344×768 横排三联）
 
-参考文档那套构图可以照搬：
-`left 50%: front-facing head, neck and collarbone close-up / right 50%: strict front view and strict back view, full body, head to shoe soles visible, same character`，
-外加左特写不许用侧脸或四分之三脸、三视图的服装与鞋靴必须完全一致、不许边框与分隔线、画面里只有一个角色。
+横排三列，用位置锚点写死，实测 3/3 次都出对了三列，图见 `examples/success-07-three-view-turnaround.jpg`。
 
-**本机尚未实测**（H3 在 16:9 里塞三视图的稳定性没跑过）。要用就先跑一张验证，再写进交付；
-跑之前把「未验证」这句话留在文档里，不要等用户踩坑才补。
+```
+Composition anchors, measured on the frame: three equal columns of the same character.
+Left third: a front-facing close-up of her head, neck and collarbones, cut at the shoulders,
+her face centred in that third. Middle third: one strict front view of her whole body, her
+shoes on the floor inside the bottom tenth, the top of her head inside the top tenth,
+silhouette fully inside the frame with empty backdrop above and below. Right third: one
+strict back view of the same body at the same scale and distance, head to soles visible,
+her back to the lens. All three figures stand on the same floor line. No frames, no dividing
+lines, no labels, no arrows.
+```
+
+配套要求：三处的人物描述、服装、姿势只写一遍（别分三套写，会分叉）；机位写「strict front / strict back」而不是「4/3 侧」；背面看不见的结构要么不写，要么明说按正面补全。
+
+已观察到的偏差（写进交付话里，别当没发生）：
+- 特写列容易被画得过大，脸直接顶到画布边缘、脖子和锁骨被挤掉——想留住它们就把「cut at the shoulders」再多写一句 `her collarbones and the top of her chest are inside the crop`。
+- 胸甲这类「armoured bodice」会被读成光滑的曲面壳，想要甲片质感得写 `brushed metal plates, matte finish, rivets along the seams`。
+- 背面列会被大衣完全遮住，这是正常的（资产图要的是轮廓），别期待看到背部的复杂结构。
+
+尺寸：1344×768（32 的倍数，等于 MAX_PIXELS 上限），30 步，`conditioning` 节点不接 vae、不接参考图；参考图一旦接上，列的版式会被它钉住。
 
 ## 十二、平台差异（同一句话在两家模型上是反的）
 
