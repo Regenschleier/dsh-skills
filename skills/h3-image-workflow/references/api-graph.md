@@ -5,40 +5,23 @@
 
 ## 带参考图（锁身份，vae 接着）
 
-```json
-{
-  "1":  { "class_type": "UNETLoader",
-          "inputs": { "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors", "weight_dtype": "default" } },
-  "2":  { "class_type": "ModelAttentionBackend",
-          "inputs": { "model": ["1", 0], "attention": "comfy kitchen attention" } },
-  "3":  { "class_type": "CLIPLoader",
-          "inputs": { "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors", "type": "minimax" } },
-  "5":  { "class_type": "VAELoader",
-          "inputs": { "vae_name": "minimax_h3_video_vae_fp16.safetensors" } },
-  "7":  { "class_type": "LoadImage", "inputs": { "image": "ref.png" } },
-  "6":  { "class_type": "MiniMaxH3ImageConditioning",
-          "inputs": {
-            "clip": ["3", 0],
-            "vae": ["5", 0],
-            "prompt": "PROMPT",
-            "width": 768,
-            "height": 1344,
-            "images.image_0": ["7", 0]
-          } },
-  "8":  { "class_type": "RandomNoise", "inputs": { "noise_seed": 1 } },
-  "9":  { "class_type": "KSamplerSelect", "inputs": { "sampler_name": "res_multistep" } },
-  "10": { "class_type": "BasicScheduler",
-          "inputs": { "model": ["2", 0], "scheduler": "simple", "steps": 30, "denoise": 1 } },
-  "11": { "class_type": "BasicGuider",
-          "inputs": { "model": ["2", 0], "conditioning": ["6", 0] } },
-  "12": { "class_type": "SamplerCustomAdvanced",
-          "inputs": { "noise": ["8", 0], "guider": ["11", 0], "sampler": ["9", 0],
-                      "sigmas": ["10", 0], "latent_image": ["6", 1] } },
-  "13": { "class_type": "LTXVSeparateAVLatent", "inputs": { "av_latent": ["12", 0] } },
-  "14": { "class_type": "VAEDecode", "inputs": { "samples": ["13", 0], "vae": ["5", 0] } },
-  "15": { "class_type": "SaveImage", "inputs": { "images": ["14", 0], "filename_prefix": "h3ref/out" } }
-}
-```
+节点表直接取 [`api-graph.json`](./api-graph.json)（同目录，14 个节点，就是实跑过的那张图，只把
+`prompt` / `image` / `noise_seed` / `filename_prefix` 换成了占位值）。不再在正文里重复贴一份，避免两处不一致。
+
+节点清单（按 id）：
+
+| id | 节点 | 作用 |
+|---|---|---|
+| 1 | `UNETLoader` | int8 fl2va 主模型 |
+| 2 | `ModelAttentionBackend` | `comfy kitchen attention`（INT8 注意力，N 卡必需） |
+| 3 | `CLIPLoader` | qwen3vl_32b，`type=minimax` |
+| 4 | `VAELoader` | video vae fp16 |
+| 5 | `LoadImage` | 参考图 `ref.png` |
+| 6 | `MiniMaxH3ImageConditioning` | 提示词 + 画幅 + `images.image_0`（**这是整张图的开关**） |
+| 7/10/11 | `BasicGuider` + `BasicScheduler` | simple / 30 步 / denoise 1 |
+| 8/9/12 | `RandomNoise` + `KSamplerSelect` + `SamplerCustomAdvanced` | res_multistep 采样 |
+| 13 | `LTXVSeparateAVLatent` | 拆 AV，取第 0 输出 |
+| 14/15 | `VAEDecode` + `SaveImage` | 出图 |
 
 ## 出 CG：只删一行
 
