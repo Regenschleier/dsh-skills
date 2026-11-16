@@ -1,0 +1,149 @@
+{
+ "1": {
+  "inputs": {
+   "weight_dtype": "default",
+   "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors"
+  },
+  "class_type": "UNETLoader"
+ },
+ "2": {
+  "inputs": {
+   "attention": "comfy kitchen attention",
+   "model": [
+    "1",
+    0
+   ]
+  },
+  "class_type": "ModelAttentionBackend"
+ },
+ "3": {
+  "inputs": {
+   "device": "default",
+   "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+   "type": "minimax"
+  },
+  "class_type": "CLIPLoader"
+ },
+ "4": {
+  "inputs": {
+   "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+  },
+  "class_type": "VAELoader"
+ },
+ "5": {
+  "inputs": {
+   "image": "ref.png"
+  },
+  "class_type": "LoadImage"
+ },
+ "6": {
+  "inputs": {
+   "clip": [
+    "3",
+    0
+   ],
+   "width": 768,
+   "prompt": "PROMPT",
+   "height": 1344,
+   "images.image_0": [
+    "5",
+    0
+   ]
+  },
+  "class_type": "MiniMaxH3ImageConditioning"
+ },
+ "7": {
+  "inputs": {
+   "model": [
+    "2",
+    0
+   ],
+   "conditioning": [
+    "6",
+    0
+   ]
+  },
+  "class_type": "BasicGuider"
+ },
+ "8": {
+  "inputs": {
+   "noise_seed": 1
+  },
+  "class_type": "RandomNoise"
+ },
+ "9": {
+  "inputs": {
+   "sampler_name": "res_multistep"
+  },
+  "class_type": "KSamplerSelect"
+ },
+ "10": {
+  "inputs": {
+   "scheduler": "simple",
+   "model": [
+    "2",
+    0
+   ],
+   "steps": 30,
+   "denoise": 1
+  },
+  "class_type": "BasicScheduler"
+ },
+ "11": {
+  "inputs": {
+   "sigmas": [
+    "10",
+    0
+   ],
+   "guider": [
+    "7",
+    0
+   ],
+   "noise": [
+    "8",
+    0
+   ],
+   "sampler": [
+    "9",
+    0
+   ],
+   "latent_image": [
+    "6",
+    1
+   ]
+  },
+  "class_type": "SamplerCustomAdvanced"
+ },
+ "12": {
+  "inputs": {
+   "av_latent": [
+    "11",
+    0
+   ]
+  },
+  "class_type": "LTXVSeparateAVLatent"
+ },
+ "13": {
+  "inputs": {
+   "samples": [
+    "12",
+    0
+   ],
+   "vae": [
+    "4",
+    0
+   ]
+  },
+  "class_type": "VAEDecode"
+ },
+ "14": {
+  "inputs": {
+   "images": [
+    "13",
+    0
+   ],
+   "filename_prefix": "h3/out"
+  },
+  "class_type": "SaveImage"
+ }
+}
