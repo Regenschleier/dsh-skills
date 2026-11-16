@@ -71,6 +71,9 @@ ample space above the head and below the feet, vertical composition.
 | 半身 | medium shot / waist-up | the frame cuts her at the waist，腰部以上在画面内，腰以下在画面外 |
 | 特写 | close-up | her head fills about two thirds of the frame height（用占比，不用镜头名） |
 
+> 前一行「别太近」、第二行「别裁脚」、第三行「头顶留白」是上表那组对照里直接验证过的。
+> **「半身」与「特写」两行只是同一原理的延伸写法，本机没单独跑过对照**，用之前先出一张确认。
+
 ## 自检（出图后 3 秒判断）
 
 1. 鞋底与画面下沿之间有没有一条空地？没有 → 脚被裁的风险已经在。
@@ -80,6 +83,7 @@ ample space above the head and below the feet, vertical composition.
 
 ## 复现命令
 
-见 `../references/api-graph.md` 里的 JSON 骨架，改动三处即可复现本页对照：
-`6.inputs.prompt`（换成上面对照写法）、`8.inputs.noise_seed`、`14.inputs.filename_prefix`；
-要「带参考图」就把 `5` 号 LoadImage 接到 `6.inputs["images.image_0"]`，不要接 `vae`。
+可用的 API JSON 骨架在另一个 skill 里：[`../../h3-image-workflow/references/api-graph.md`](../../h3-image-workflow/references/api-graph.md)
+（节点 `6` 是 MiniMaxH3ImageConditioning，`7` 是 LoadImage，`8` 是噪声，`15` 是保存）。
+改三处即可复现本页对照：`6.inputs.prompt`（换成上面对照写法）、`8.inputs.noise_seed`、`15.inputs.filename_prefix`；
+要「带参考图」就把 `"images.image_0": ["7", 0]` 留着、`"vae": ["5", 0]` 删掉；要「不带参考图」就连 `"images.image_0"` 一起删。
