@@ -25,8 +25,7 @@ ComfyUI 里的 MiniMax H3 有两个入口：纯文字（`CLIPTextEncode` 直接�
 UNETLoader(int8 fl2va) → ModelAttentionBackend("comfy kitchen attention")
         ├── BasicGuider(model)          ← conditioning 来自节点 6 的第 0 输出
         └── BasicScheduler(simple, 30, 1)
-CLIPLoader(qwen3vl_32b, minimax) ──┬── CLIPTextEncode(prompt)   ← 想更强就再喂一次
-                                   └── 节点6.clip
+CLIPLoader(qwen3vl_32b, minimax) ────── 节点6.clip
 VAELoader(minimax_h3_video_vae_fp16) ─┬── 节点6.vae   ← 想出 CG 就把这根删掉
                                       └── VAEDecode.vae
 LoadImage → 节点6["images.image_0"]
@@ -36,6 +35,9 @@ SamplerCustomAdvanced(noise, guider, KSamplerSelect(res_multistep), sigmas)
 ```
 
 可复制的 JSON 骨架见 [references/api-graph.md](references/api-graph.md)。
+
+**注意**：走参考图链路时**不需要** `CLIPTextEncode`——提示词直接写在节点 6 的 `prompt` 字段里，再由它返回的
+conditioning 一路喂给 `BasicGuider`。只有纯文字链路才用 `CLIPTextEncode → BasicGuider`。
 
 **最常踩的语法坑**：autogrow 插槽在 API 里是**带点的字面键** `"images.image_0": ["7", 0]`。
 写成 `"image_0"` 会当关键字参数传给 `execute()`，报
