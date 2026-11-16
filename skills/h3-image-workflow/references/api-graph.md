@@ -71,3 +71,14 @@ $cli.UploadString("http://127.0.0.1:8188/prompt", "POST", (Get-Content "body.jso
 | 请求被拒 / 提示缺少 `prompt` | 把裸节点表直接 POST 了 | 外面包一层 `{"prompt": {...}}` | 实测（本 skill 手册第一版就写错在这里） |
 | 出图约 1.8 MP，8 GB 卡爆显存 | `width/height` 留 0，按参考图短边 1024 自动出画布 | 显式写 768×1344 | 源码常量 `IMAGE_REF_SHORT_EDGE=1024` 推得，**未实测** |
 
+## 这份图用在哪些东西上（全仓唯一档案）
+
+仓库里所有示例图都是这张 `api-graph.json` 跑出来的，不再另存工作流文件：
+
+- `skills/character-design/examples/failure-05` / `success-06`（景别锚点对照，seed 20261161 / 20261162）
+- `skills/character-design/examples/success-07`（横排三视图，1344×768，seed 20261301，同一张图只改尺寸）
+- `skills/h3-image-workflow/examples/` 的 9 张成功/失败对照（seed 见各图说明）
+
+复现时只改三处：`6.inputs.prompt`、`8.inputs.noise_seed`、`15.inputs.filename_prefix`。
+接参考图 = 保留 `"images.image_0"` 与 `"vae"`；要 CG = 删 `"vae"`；要纯文字 = 两个都删。
+
