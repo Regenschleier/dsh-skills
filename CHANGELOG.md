@@ -54,7 +54,16 @@
 新增 `examples/`：9 张实拍对照图（5 成功 4 失败），每张下面写清配置、症状、病因与改法。
 
 
-**工作流文件去重（2026-11-17）**
+**三视图的「朝向」与「部件」专项（2026-11-17 追加）**
 
-- 新增 `skills/h3-image-workflow/references/api-graph.json`：实跑过的 14 节点图，只留占位值，可直接 POST。
-- `api-graph.md` 正文里那份重复的 JSON 删掉，改成指向该文件 + 一张节点清单表，避免两处不一致。
+新增 character-design/references/multi-view-orientation.md，把后视图最容易翻车的地方单独成页，十条对照全部带 seed：
+
+- 朝向由参考图决定，不由措辞决定：正面参考图 + 「camera stands BEHIND her / no eyes, no nose, no mouth」写到最后一次仍出正面（seed 20261903 / 20261904 / 20261905）；换成紧裁切的背面参考图，一次出对（20261910）。
+- 部件也会被参考图带错：背面参考图里是短靴，提示词写「及膝长靴」仍出短靴（20262003）。
+- 解法是双参考图：images.image_0 管朝向、images.image_1 管部件特写，提示词分两段写 <Picture 1> / <Picture 2>（20262041，朝向与靴子同时对）。
+- 跨列一致性靠措辞不稳（把「背面头发到腰」写进服装段反而把大衣拆碎，20261511；挪进版式锚点命中，20261521；同句换回 b 版 seed 20261522 又失败），稳定解是每列单图再 PIL 拼版。
+- 附带四条易错点与出图前 5 秒自检清单；第五节给了可直接运行的 PIL 拼版代码。
+
+新增案例图 4 张（均本项目自渲染，640 宽 JPEG q84）：ailure-08-back-words-still-front.jpg、ailure-09-back-wrong-boots.jpg、success-08-back-from-back-reference.jpg、success-09-back-boots-two-refs.jpg，并在 examples/README.md 逐张说明「怎么来的、为什么算成/算败」。
+
+SKILL.md 第十一节末尾加了指向该页的四句摘要，方便不点进 reference 也能抓住要点。
