@@ -38,13 +38,28 @@
 [`references/multi-view-orientation.md`](../references/multi-view-orientation.md)。
 四张都是本项目自己渲染的图，不含他人作品或个人信息。
 
-- `failure-08-back-words-still-front.jpg`（seed 20261905）：想要背面，提示词把
-  `the camera stands BEHIND her … her face does not appear in this picture at all, no eyes, no nose, no mouth`
-  写到最前面，参考图是正面立绘 → **出来还是正面**。
-- `failure-09-back-wrong-boots.jpg`（seed 20262003）：换成背面参考图后朝向对了，
-  但参考图里是短靴，提示词写着「及膝长靴」也没用 → **靴子仍是短的**。
-- `success-08-back-from-back-reference.jpg`（seed 20261910）：同一套提示词，只把参考图换成
-  紧裁切的背面块 → **一次出对背身**。
-- `success-09-back-boots-two-refs.jpg`（seed 20262041）：在上一张的基础上再喂第二张参考图
-  `images.image_1`＝靴子特写，提示词分两段写 `<Picture 1>` 管朝向、`<Picture 2>` 管 footwear
-  → **朝向与及膝长靴同时正确**。
+### 失败：措辞写到极致，仍是正面（seed 20261905）
+
+提示词把 `the camera stands BEHIND her … her face does not appear in this picture at all, no eyes, no nose, no mouth` 写到最前面，参考图是正面立绘。
+
+![failure-08](../failure-08-back-words-still-front.jpg)
+
+### 失败：朝向对了，靴子被参考图带成短靴（seed 20262003）
+
+参考图换成了背面块，朝向正确；但那张参考图里是短靴，提示词写着「及膝长靴」也没用。
+
+![failure-09](../failure-09-back-wrong-boots.jpg)
+
+### 成功：换成紧裁切的背面参考图，一次出对（seed 20261910）
+
+同一套提示词，只换参考图。
+
+![success-08](../success-08-back-from-back-reference.jpg)
+
+### 成功：双参考图，朝向与及膝长靴同时正确（seed 20262041）
+
+在上一张基础上再喂第二张参考图 `images.image_1`＝靴子特写，提示词分两段写 `<Picture 1>` 管朝向、`<Picture 2>` 管 footwear。
+
+![success-09](../success-09-back-boots-two-refs.jpg)
+
+完整证据表（十条对照，全部带 seed）见 [`references/multi-view-orientation.md`](../references/multi-view-orientation.md)。
