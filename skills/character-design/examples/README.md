@@ -31,3 +31,20 @@
 - 怎么做的：1344×768（32 的倍数，等于 MAX_PIXELS 上限）、30 步、conditioning 节点**不接参考图也不接 vae**，版式全部用画面位置锚点写死（`three equal columns … left third … middle third … right third`）。
 - 结果：三列一次到位，同一角色、同一地板线、无边框无标签；seed 20261301。同参数的另外两次（20261302 / 20261311）也都是三列结构，说明版式稳定，差异在脸与细节。
 - 已知偏差：特写列容易被画得过大、挤掉脖子与锁骨；`armoured bodice` 会被读成光滑曲面壳而不是甲片。
+
+## 后视图的四张（朝向与部件的对照）
+
+这一组专门证明「朝向由参考图决定」和「部件也会被参考图带错」，完整表格见
+[`references/multi-view-orientation.md`](../references/multi-view-orientation.md)。
+四张都是本项目自己渲染的图，不含他人作品或个人信息。
+
+- `failure-08-back-words-still-front.jpg`（seed 20261905）：想要背面，提示词把
+  `the camera stands BEHIND her … her face does not appear in this picture at all, no eyes, no nose, no mouth`
+  写到最前面，参考图是正面立绘 → **出来还是正面**。
+- `failure-09-back-wrong-boots.jpg`（seed 20262003）：换成背面参考图后朝向对了，
+  但参考图里是短靴，提示词写着「及膝长靴」也没用 → **靴子仍是短的**。
+- `success-08-back-from-back-reference.jpg`（seed 20261910）：同一套提示词，只把参考图换成
+  紧裁切的背面块 → **一次出对背身**。
+- `success-09-back-boots-two-refs.jpg`（seed 20262041）：在上一张的基础上再喂第二张参考图
+  `images.image_1`＝靴子特写，提示词分两段写 `<Picture 1>` 管朝向、`<Picture 2>` 管 footwear
+  → **朝向与及膝长靴同时正确**。
