@@ -101,9 +101,20 @@ to just below the knee, a flared V-shaped collar of violet crystal with a crimso
 
 ## 八、对照图出处
 
-- `examples/failure-08-back-words-still-front.jpg` — 证据表第 3 条，措辞写到极致仍是正面
-- `examples/failure-09-back-wrong-boots.jpg` — 证据表第 6 条，朝向对、靴子被参考图带成短靴
-- `examples/success-08-back-from-back-reference.jpg` — 证据表第 4 条，换成背面参考图后一次成功
-- `examples/success-09-back-boots-two-refs.jpg` — 证据表第 7 条，双参考图，朝向与靴子都对
-
 四张都是本项目自己渲染的图（非他人作品、不含个人信息），按 640 宽、JPEG q84 压缩后入库。
+
+**失败：措辞写到极致，仍是正面**（证据表第 3 条，seed 20261905）
+
+![背面提示词失效，仍出正面](../examples/failure-08-back-words-still-front.jpg)
+
+**失败：朝向对了，靴子被参考图带成短靴**（证据表第 6 条，seed 20262003）
+
+![朝向对但靴子错](../examples/failure-09-back-wrong-boots.jpg)
+
+**成功：换成紧裁切的背面参考图，一次出对**（证据表第 4 条，seed 20261910）
+
+![背面参考图出背面](../examples/success-08-back-from-back-reference.jpg)
+
+**成功：双参考图，朝向与及膝长靴同时正确**（证据表第 7 条，seed 20262041）
+
+![双参考图：朝向 + 靴子](../examples/success-09-back-boots-two-refs.jpg)
