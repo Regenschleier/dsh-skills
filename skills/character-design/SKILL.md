@@ -107,8 +107,9 @@ two-dimensional anime artwork.
 
 1. **参考图没拍到的地方，可以补全，但不能说「参考图证实了」**。背面、后腰、鞋靴这类没入镜的，按正面设计克制补全，并在给用户的话里注明是补的。
 2. **同一角色要用同一句锚**。本机已验证的一半是：**只写一份人物描述、跑三视图，出来的确是同一个角色**
-   （见 `examples/success-07-three-view-turnaround.jpg`）；反过来的对照组（只写「the same character」而不重述锚点）
-   **本机没跑过**，所以「会换脸」这句仍是参考文档的经验、标为推断。
+   （见 `examples/success-07-three-view-turnaround.jpg`）；反过来的对照组（只写「the same character as <Picture 1>」、
+   不重述任何锚点）后来补跑了：**带参考图时身份守住了**（同发型、狼耳、大衣、靴子都对，`h3exp2/same_only_back`）。
+   所以「不重述锚点必然换脸」在本机**没复现**；没有参考图、纯靠文字跨图保持一致的情况仍未测。
 
 ## 十一、多视图资产图（已实测：1344×768 横排三联）
 
@@ -162,10 +163,10 @@ lines, no labels, no arrows.
 
 | 项目 | Midjourney（参考文档那套） | 本机 MiniMax H3 |
 |---|---|---|
-| 负向 | 用 `--no a, b, c`；正文优先正面描述、避免否定式 | 正文直接写 `no text, no watermark, no extra limbs`：**实测**画到图里没再出现文字与水印；其余负向词没逐个验证 |
+| 负向 | 用 `--no a, b, c`；正文优先正面描述、避免否定式 | 正文直接写 `no text, no watermark, no extra limbs`：**实测**画到图里没再出现文字与水印；其余负向词没逐个验证。另：**「宽泛 no text 会把几何徽记一起排掉」在本机没复现**——同角色、同 seed，A 组只写 `No text`、B 组写 `No random typography, no captions, no logo`，两组都保留了领口的金色 L 徽记（`h3exp2/il_A`、`il_B`） |
 | 参数 | `--ar --v --p` 固定顺序放末尾，连字符只在参数里出现 | 没有参数标记；画幅就是节点里的 width/height（32 的倍数，实测 768×1344 可用） |
 | 皮肤 | `natural pores, subtle freckles`（越真越好） | **实测**：一写 pores / photographic grain 就翻成真人照片，用户会否；必须写 no pores |
-| 风格库 | 六套（Unreal/写实 CGI/水墨/废土…），关键词固定 | 只用单一渲染锚（半写实 3D CG 动画电影）。叠加风格词会互相拉扯属**推断**，没做对照实验 |
+| 风格库 | 六套（Unreal/写实 CGI/水墨/废土…），关键词固定 | 只用单一渲染锚（半写实 3D CG 动画电影）。**叠加互相拉扯的风格词做过一次对照**：同一句 + `Unreal Engine 5, PBR, 8k, watercolour, ink wash, flat cel, oil painting` 堆在一起时，主调仍守住 2D 平涂，但披风内衬被画成了水彩湿边（`h3exp2/style_conflict` vs `style_clean`）——所以「拉扯」是真的，只是先从局部材质开始坏 |
 | 镜头 | 35mm F5.6 1/125s 这类参数有意义 | 焦距与光圈只当气质提示；构图靠画面占比与位置锚点（**实测**，见第九节） |
 | 版式 | 影棚白底 + 竖屏 9:16 是默认 | 白底是否削弱氛围**未做对照**；本机已验证的用法是环境光 + 散景 |
 
