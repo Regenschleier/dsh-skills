@@ -81,6 +81,31 @@ ample space above the head and below the feet, vertical composition.
 3. 人物高度占画幅几成？写的是六成、出来八成，说明「远一点」那半句没被吃进去。
 4. 有没有接参考图？接了 → 直接上位置锚点，别只写口令。
 
+## 三视图/角色表：脸被压到多少像素，眼睛就没了
+
+画「一张横图里放三列」时，先算一笔账再动手。H3 单张出图有像素上限
+(`MAX_PIXELS = 768×1344 = 1032192`)，所以：
+
+| 版式 | 每列宽度 | 人物头高 | 眼睛约几像素 | 结果 |
+|---|---|---|---|---|
+| 1344×768 一张图塞三列 | 448 px | ≈110 px | ≈10 px | 放大 6 倍后眼睛是**两团暗红影子**，没有眼白/虹膜/瞳孔 |
+| 每视角单图 768×1344，再 PIL 拼成 2304×1344 | 768 px | ≈200 px | ≈25 px | 放大 6 倍后眼白、虹膜、瞳孔、一个高光点都读得出来 |
+
+对照：`examples/failure-10-eyes-lost-at-448px.jpg`（448 px 版的脸部放大 6 倍）、
+`examples/success-10-eyes-readable-2304-sheet.jpg`（2304 拼版版的脸部放大 6 倍）。
+两张都是 seed 20264001、同一套渲染锚、同一模型。
+
+所以「三视图 / 角色设定表」的推荐做法不是「一张图里画三列」，而是：
+
+1. 正面、侧面、背面**各出一张 768×1344**（背面必须用背面参考图，见 `multi-view-orientation.md`）；
+2. 用 PIL 横向拼成 `768×3 × 1344`（这里是 2304×1344），白底补缝；
+3. 需要交付小图时再整体降采样，别让它反过来决定每列的原始像素。
+
+附带一条措辞教训（**属推断，未做隔离实验**）：第一版写的是照抄原画设定的 `narrow red eyes`，
+出来就是两条细缝；第二版把部件写全（`a clean white sclera, a round crimson iris, a dark pupil, one crisp
+white specular dot, a dark upper lash line above the iris, the fringe parts above the eyes`）才有眼睛。
+因为措辞和分辨率是同时改的，**单独哪一个够不够，本机没验证过**；稳妥做法是两件一起做。
+
 ## 复现命令
 
 本页所有对照都用同一张图跑的，那张图的唯一存档在 `h3-image-workflow` skill 里，不在这里重复第二份。
