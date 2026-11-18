@@ -1,5 +1,22 @@
 # 更新记录
 
+## 2026-11-19（第二批：把文档里所有「推断/单次观察」跑成实测）
+
+**11 个渲染实验，逐条改口；没复现的就降级，不硬撑。**
+
+| 条目 | 实验 | 结果 |
+|---|---|---|
+| 眼睛「分辨率 vs 措辞」 | 同 768×1344、同 seed，只改眼睛那半句 | **两个变量都成立**：`narrow red eyes` → 细缝（`eye_A`）；写全 sclera/iris/pupil/高光 → 眼睛可用（`eye_B`）。原「属推断」标注删除，换成隔离实验 |
+| 景别换算表「半身/特写」 | 各跑一张 | 特写**命中**（`frame_close`）；**半身收紧一档**，实际落在胸口（`frame_half`），表下补了说明 |
+| 「只写 the same character 会换脸」 | 只写一句、不重述锚点 | **没复现**：带参考图时身份守住（`same_only_back`），原「推断」改为实测+限定条件 |
+| 「宽泛 no text 会把几何徽记排掉」 | A 组 `No text` / B 组细粒度排除 | **没复现**：两组都保留金色 L 徽记（`il_A`/`il_B`），MJ 那条不写进做法 |
+| 「叠加风格词互相拉扯」 | 堆满互相冲突的渲染词 vs 干净 2D 锚 | **弱支持**：主调仍守住 2D，但披风内衬变水彩湿边（`style_conflict` vs `style_clean`） |
+| 「带背景的参考图会带偏构图」 | 同卡换两个 seed 复跑 | **没复现**：两次都出对背身且守住白底（`bgref_back_s1/s2`），降级为个案 |
+
+- 改到：`references/framing-lock.md`（景别两行、眼睛两变量）、`references/multi-view-orientation.md`（第 5 条降级）、`SKILL.md` 第十节第 2 条与第十二节两行。
+- 新证据图：`examples/success-12-eye-wording-verified.jpg`（左 A 右 B，脸部放大 3 倍）、`examples/success-13-framing-half-vs-close.jpg`（半身 vs 特写）。
+- 全部 11 张原图在 `output\h3exp2\`，提示词 JSON 在 `%TEMP%\h3tpl\exp2_*.json`，可照着复现。
+
 ## 2026-11-19
 
 **更正：背面朝向可以由措辞救回来（A/B + 重复验证，seed 20264001–20264003）**
