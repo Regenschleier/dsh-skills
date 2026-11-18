@@ -34,7 +34,7 @@ whenToUse: 用户要生成/改人物图，或在别处复现同一套人像观�
 每段写「可判定的状态」，不写物理量（「推近 12cm」在蒸馏模型上无效，写「头像占画幅从 55% 变 65%」）。
 落到提示词里还要在前面加一段**渲染锚**（是什么介质），在最后加**隐式负向**（不要什么）。
 
-模板见 [references/prompt-skeleton.md](references/prompt-skeleton.md)。
+模板见 [rreferences/prompt-skeleton.md](rreferences/prompt-skeleton.md)。
 
 ## 四、已定版的渲染锚（照抄，别改写）
 
@@ -134,6 +134,24 @@ lines, no labels, no arrows.
 
 尺寸：单张 768×1344（拼版后 2304×1344）；若要走「一张横图三列」则是 1344×768（32 的倍数、等于 MAX_PIXELS 上限），30 步，`conditioning` 节点不接 vae、不接参考图；参考图一旦接上，列的版式会被它钉住。眼睛这类小结构在 448 px 宽的列里画不出来，选哪种版式先看这张表。
 
+### 媒介（2D 平涂 / 3D CG / 真人照片）由参考图决定，加形容词改不动
+
+实测（同一台机器、768×1344、30 步、res_multistep）：
+
+- 参考图是 **2D 平涂插画**（崩坏角色卡 / Thelema 卡）→ 出来还是 2D 平涂。把开头写成 `3D CG character reference sheet`、把 CG 锚提到第一句、甚至把 conditioning 的 vae 断开（seed 20261201 / 20261202 / 20261211 三次），出来的仍是平涂线稿，只是细节多一点，不会变成 CG。
+- 参考图是 **真人照片** → 出来就是照片（seed 20261116 / 20261117）。
+- 参考图是 **3D CG 渲图的裁切** → 出来是半写实 CG（seed 20261171，bust7）。
+- 参考图是 **2D 立绘 + 明确写 cel-shaded** → 2D 立绘（seed 20264001，ark_a / ark_b 两张角色表）。
+
+所以做资产图之前先看参考图是什么媒介，**输出跟着它走**，三视图的骨架也要跟着换：
+
+| 参考图 | 骨架怎么写 |
+|---|---|
+| 2D 平涂立绘 | `drawn and cel-shaded … crisp black line art of even weight, flat colour fills with one hard shadow tone and one highlight, no 3D render`；再补一句 `in the exact art style of <Picture 1>` |
+| 3D CG 渲图 | 半写实 CG 锚（见第八节与 `references/prompt-skeleton.md`） |
+| 真人照片 | 出来就是照片；想要 CG 只能换参考图或撤掉参考图纯文字写 |
+
+要 2D 就别往里塞 CG 词，要 CG 就换一张 3D 渲染过的参考图。这条和「朝向由参考图决定」是同一个机制，别指望用形容词去压。
 **三视图最容易翻车的是「背面」这一列，单独写了一页**：[references/multi-view-orientation.md](references/multi-view-orientation.md)。三句话概括：
 - 朝向由**参考图**决定，不由措辞决定——正面参考图 + 「camera stands BEHIND her / no eyes, no nose, no mouth」连跑三个 seed 全是正面；换成紧裁切的背面参考图，一次就出对（seed 20261903/04/05 全失败 vs 20261910 成功）。
 - 部件也会被参考图带错——背面参考图里是短靴，提示词写「及膝长靴」照样出短靴（seed 20262003）。
