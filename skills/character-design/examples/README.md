@@ -42,24 +42,44 @@
 
 提示词把 `the camera stands BEHIND her … her face does not appear in this picture at all, no eyes, no nose, no mouth` 写到最前面，参考图是正面立绘。
 
-![failure-08](../failure-08-back-words-still-front.jpg)
+![failure-08](failure-08-back-words-still-front.jpg)
 
 ### 失败：朝向对了，靴子被参考图带成短靴（seed 20262003）
 
 参考图换成了背面块，朝向正确；但那张参考图里是短靴，提示词写着「及膝长靴」也没用。
 
-![failure-09](../failure-09-back-wrong-boots.jpg)
+![failure-09](failure-09-back-wrong-boots.jpg)
 
 ### 成功：换成紧裁切的背面参考图，一次出对（seed 20261910）
 
 同一套提示词，只换参考图。
 
-![success-08](../success-08-back-from-back-reference.jpg)
+![success-08](success-08-back-from-back-reference.jpg)
 
 ### 成功：双参考图，朝向与及膝长靴同时正确（seed 20262041）
 
 在上一张基础上再喂第二张参考图 `images.image_1`＝靴子特写，提示词分两段写 `<Picture 1>` 管朝向、`<Picture 2>` 管 footwear。
 
-![success-09](../success-09-back-boots-two-refs.jpg)
+![success-09](success-09-back-boots-two-refs.jpg)
 
 完整证据表（十条对照，全部带 seed）见 [`references/multi-view-orientation.md`](../references/multi-view-orientation.md)。
+
+## 三视图里「眼睛没了」的对照（分辨率决定脸够不够大）
+
+同一套渲染锚、同一个 seed 20264001、同一个模型，只改版式。两张都是本项目自己渲染的图，不含他人作品或个人信息。
+
+### 失败：一张 1344×768 里塞三列，眼睛糊成红影
+
+三列各 448 px，人物头高约 110 px、眼睛约 10 px。放大 6 倍看，就是两团暗红影子，没有眼白、没有虹膜、没有瞳孔。
+
+![failure-10](failure-10-eyes-lost-at-448px.jpg)
+
+### 成功：每视角单图 768×1344，再拼成 2304×1344
+
+头高约 200 px、眼睛约 25 px。同一张脸放大 6 倍，眼白、虹膜、瞳孔、一个高光点都读得出来。
+
+![success-10](success-10-eyes-readable-2304-sheet.jpg)
+
+> 这一组同时改了两件事：分辨率（448→768 每列）与眼睛措辞（`narrow red eyes` → 写明 sclera / iris / pupil / specular）。
+> **哪一项起主要作用，本机没做隔离实验**，所以文案里按「两件一起做」处理。做法与算式见
+> [`references/framing-lock.md`](../references/framing-lock.md) 的「三视图/角色表：脸被压到多少像素」。
