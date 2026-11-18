@@ -72,7 +72,16 @@ ample space above the head and below the feet, vertical composition.
 | 特写 | close-up | her head fills about two thirds of the frame height（用占比，不用镜头名） |
 
 > 前一行「别太近」、第二行「别裁脚」、第三行「头顶留白」是上表那组对照里直接验证过的。
-> **「半身」与「特写」两行只是同一原理的延伸写法，本机没单独跑过对照**，用之前先出一张确认。
+
+「半身」与「特写」两行后来各跑了一次对照（768×1344、参考图 `ref_aes2_c.jpg`、seed 20264001）：
+
+| 写法 | 实测结果 |
+|---|---|
+| 特写：`her face fills the upper two thirds, the frame cuts her below the collarbones` | **命中**，就是头肩特写（`h3exp2/frame_close`） |
+| 半身：`this is a waist up portrait, the frame cuts her just below the waist` | **收紧一档**，实际落在胸口上方，没到腰（`h3exp2/frame_half`） |
+
+所以半身想稳，别只写「切在腰」：要么接受它比你要的更近，要么把位置写成硬锚点
+（`her hands rest inside the bottom tenth`），并且先出一张确认再批量跑。
 
 ## 自检（出图后 3 秒判断）
 
@@ -101,10 +110,15 @@ ample space above the head and below the feet, vertical composition.
 2. 用 PIL 横向拼成 `768×3 × 1344`（这里是 2304×1344），白底补缝；
 3. 需要交付小图时再整体降采样，别让它反过来决定每列的原始像素。
 
-附带一条措辞教训（**属推断，未做隔离实验**）：第一版写的是照抄原画设定的 `narrow red eyes`，
-出来就是两条细缝；第二版把部件写全（`a clean white sclera, a round crimson iris, a dark pupil, one crisp
-white specular dot, a dark upper lash line above the iris, the fringe parts above the eyes`）才有眼睛。
-因为措辞和分辨率是同时改的，**单独哪一个够不够，本机没验证过**；稳妥做法是两件一起做。
+措辞这一条已经做过隔离实验（同分辨率 768×1344、同参考图 `ref_ark_a.png`、同 seed 20264001，只改眼睛那半句）：
+
+| 眼睛写法 | 实测结果 |
+|---|---|
+| 照抄原画设定的 `her narrow red eyes are calm` | 两条细缝，眼白/虹膜/瞳孔读不出来（`h3exp2/eye_A`） |
+| `a clean white sclera, a round crimson iris, a dark pupil, one crisp white specular dot, a dark upper lash line above the iris; the fringe parts above the eyes` | 眼睛张开、虹膜与高光都在（`h3exp2/eye_B`） |
+
+也就是说：**分辨率决定「画得下画不下」，措辞决定「画的是眼睛还是两条缝」**，两个变量都要管，
+不是二选一。上面 448 px 那组里两者是同时改的，现在就拆开了。
 
 ## 复现命令
 
