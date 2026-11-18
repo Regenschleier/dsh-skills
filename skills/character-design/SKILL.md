@@ -132,13 +132,13 @@ lines, no labels, no arrows.
 - 胸甲这类「armoured bodice」会被读成光滑的曲面壳，想要甲片质感得写 `brushed metal plates, matte finish, rivets along the seams`。
 - 背面列会被大衣完全遮住，这是正常的（资产图要的是轮廓），别期待看到背部的复杂结构。
 
-尺寸：1344×768（32 的倍数，等于 MAX_PIXELS 上限），30 步，`conditioning` 节点不接 vae、不接参考图；参考图一旦接上，列的版式会被它钉住。
+尺寸：单张 768×1344（拼版后 2304×1344）；若要走「一张横图三列」则是 1344×768（32 的倍数、等于 MAX_PIXELS 上限），30 步，`conditioning` 节点不接 vae、不接参考图；参考图一旦接上，列的版式会被它钉住。眼睛这类小结构在 448 px 宽的列里画不出来，选哪种版式先看这张表。
 
 **三视图最容易翻车的是「背面」这一列，单独写了一页**：[references/multi-view-orientation.md](references/multi-view-orientation.md)。三句话概括：
 - 朝向由**参考图**决定，不由措辞决定——正面参考图 + 「camera stands BEHIND her / no eyes, no nose, no mouth」连跑三个 seed 全是正面；换成紧裁切的背面参考图，一次就出对（seed 20261903/04/05 全失败 vs 20261910 成功）。
 - 部件也会被参考图带错——背面参考图里是短靴，提示词写「及膝长靴」照样出短靴（seed 20262003）。
 - 解法是**双参考图**：`images.image_0` 管朝向、`images.image_1` 管部件特写（seed 20262041，朝向与靴子同时对）。
-- 想稳定，就别指望一张横图里三列写对：**每列单图 → 裁切 → PIL 拼 1344×768**（`references/multi-view-orientation.md` 第五节有可直接跑的代码）。
+- 想稳定，就别指望一张横图里三列写对：**每列单图 768×1344 → PIL 横拼成 2304×1344**（`references/multi-view-orientation.md` 第五节有可直接跑的代码）。**不要拼回 1344×768**：那样每列只剩 448 px、头约 110 px、眼睛约 10 px，放大就是一团暗影——对照图 `examples/failure-10-eyes-lost-at-448px.jpg` vs `examples/success-10-eyes-readable-2304-sheet.jpg`，算式与做法见 `references/framing-lock.md` 的「三视图/角色表：脸被压到多少像素」。
 
 ## 十二、平台差异（同一句话在两家模型上是反的）
 
