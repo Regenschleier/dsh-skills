@@ -83,3 +83,23 @@
 > 这一组同时改了两件事：分辨率（448→768 每列）与眼睛措辞（`narrow red eyes` → 写明 sclera / iris / pupil / specular）。
 > **哪一项起主要作用，本机没做隔离实验**，所以文案里按「两件一起做」处理。做法与算式见
 > [`references/framing-lock.md`](../references/framing-lock.md) 的「三视图/角色表：脸被压到多少像素」。
+
+## 后视图：不换参考图，只改措辞的形状（新增对照）
+
+同一张**正面** 2D 角色卡当参考图、同一个 seed 20264001，只改提示词形状。
+
+### 失败：把「her back to the lens」塞在段尾、其余照写脸
+
+正面卡 + 段尾一句 back to the lens，连换三个 seed（20261903 / 20261904 / 20261905）全是**正面**。
+
+![failure-08](failure-08-back-words-still-front.jpg)
+
+### 成功：句首提机位 + 全篇不写脸
+
+提示词第一句就是 `The camera stands behind her: we see the back of her head and the back of her cape`，并且整段不描述五官；
+同一张正面参考图，seed 20264001 / 20264002 / 20264003 **三次都出对背身**。
+
+![success-11](success-11-back-view-by-wording.jpg)
+
+> 顺带做的 A/B：同 seed 20264001，A 组不加任何排除项、B 组加满 MJ 那串 `no front view, no face, no eyes, no side view, no three-quarter view`——
+> **两版都出对，看不出差别**。所以在这条上「排除项」不是关键变量，本页没有把它写进推荐做法。
