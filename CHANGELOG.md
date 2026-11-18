@@ -1,5 +1,14 @@
 # 更新记录
 
+## 2026-11-19
+
+**更正：背面朝向可以由措辞救回来（A/B + 重复验证，seed 20264001–20264003）**
+
+- 之前 `references/multi-view-orientation.md` 写的「朝向只能靠换参考图、措辞压不住」**说得太绝，已改口**。
+- 新对照：同一张**正面** 2D 角色卡，句尾塞 `her back to the lens` 且照写五官 → 3 个 seed（20261903/04/05）全出正面；改成**句首**写 `The camera stands behind her: we see the back of her head and the back of her cape` + **全篇不写脸** → 3 个 seed（20264001/02/03）全出对背身。
+- 顺带 A/B：同 seed 20264001，A 不加排除项、B 加满 `no front view, no face, no eyes, no side view, no three-quarter view`，**两版都出对、看不出差别** ⇒ 排除项在这条上不是关键变量，因此没有把 MJ 那串排除项写进推荐做法。
+- 同步更新 `SKILL.md` 第十一节摘要、`examples/README.md` 新增一节对照（内嵌 `failure-08` 与新的 `success-11-back-view-by-wording.jpg`），并把该页拼版尺寸由 1344×768 更正为 2304×1344、示例代码同步改。
+
 ## 2026-11-18
 
 **三视图的媒介由参考图决定（2D 进 2D 出 / 3D 进 3D 出）**
