@@ -1,5 +1,22 @@
 # 更新记录
 
+## 2026-11-24（新增 skill：live-wallpaper —— 静态图做无缝循环 4K 动态壁纸）
+
+**一张 832×1248 的竖图，做成 3840×2160 / 24 fps / 20 s / 13.9 MB 的 Wallpaper Engine 视频壁纸，全程不走视频模型。**
+
+| 条目 | 实验 | 结果 |
+|---|---|---|
+| 能不能跑 i2v | 查本机模型与显存 | 三个 H3 视频模型 8.43–19.53 GB，本机 8 GB 显存 → 不现实，改程序化 2.5D |
+| 遮罩半径该多大 | 同一帧换三组椭圆参数 | `rx=0.62` 边界 alpha≈73 → **左右竖直硬边**；`rx=0.78` alpha≈247 等于没羽化；`rx=0.52` 边界 alpha≈4 才真正淡出 |
+| 背景压暗的副作用 | 背景 ×0.72 vs ×0.86 + 全局 vignette | 单独压背景会在软遮罩上**勾出亮度台阶**（矩形轮廓仍在，只是边变软） |
+| 光晕方斑 | 椭圆半径 808 > 贴图半宽 800 | 边界被裁断 → 一块方形亮斑；半径收到 702 + 模糊 90 后消失 |
+| 循环是不是真的无缝 | 解首帧与末帧逐像素差 | 全部动效写成 `2π·t` 后，均值 **1.37/255**（阈值 3） |
+
+- 新增：`skills/live-wallpaper/SKILL.md`、`references/motion-and-composition.md`（推导 + 实测 + 失败对照表）、`scripts/make_wallpaper.py`、`examples/README.md` 与两张对照图（`fail-panel-seam.jpg` 贴图矩形 / `ok-oval-focus.jpg` 景深焦点）。
+- 改到：`README.md` 目录加一行。
+- 性能记录：4K 单帧 1.4 s，480 帧含编码 223 s。
+- 顺带修掉上一版 CHANGELOG 里被转义吃掉的路径（`eferences/` → `references/`、`ensor.art` → `tensor.art`）。
+
 ## 2026-11-23（新增 skill：krea2-local —— 本地 Krea 2 Turbo 与 LoRA 叠加）
 
 **这天全部结论都来自本机实测，不是社区说法。**
@@ -12,10 +29,10 @@
 | Detailer_Beauty 是什么 | 同 seed on/off | 是**美颜**（皮肤更平、腮红更显、唇更饱满），不是加细节 |
 
 - 新增：skills/krea2-local/SKILL.md、
-eferences/lora-stacking.md、
-eferences/model-sources.md。
+references/lora-stacking.md、
+references/model-sources.md。
 - 改到：skills/character-design/references/framing-lock.md 追加「风格强度也会抢构图」一节；README.md 目录加一行。
-- 顺带记录的可达性：modelscope.cn 18.6 MB/s、hf-mirror.com 可用；civitai.com / seaart.* / 	ensor.art 本机不可达；Civitai 删档模型可经 civarchive.com 取 sha256 再对 HF 归档库。
+- 顺带记录的可达性：modelscope.cn 18.6 MB/s、hf-mirror.com 可用；civitai.com / seaart.* / tensor.art 本机不可达；Civitai 删档模型可经 civarchive.com 取 sha256 再对 HF 归档库。
 
 ## 2026-11-19（第二批：把文档里所有「推断/单次观察」跑成实测）
 
