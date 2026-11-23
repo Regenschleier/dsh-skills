@@ -1,5 +1,21 @@
 # 更新记录
 
+## 2026-11-23（新增 skill：krea2-local —— 本地 Krea 2 Turbo 与 LoRA 叠加）
+
+**这天全部结论都来自本机实测，不是社区说法。**
+
+| 条目 | 实验 | 结果 |
+|---|---|---|
+| 画风到底由什么决定 | 同 seed、同提示词，只改 STYLE 段措辞（LoRA 权重 0.9 vs 0.0） | **措辞是开关，LoRA 不是**：换 STYLE 段直接从扁平插画变半写实 CG，两张 LoRA 开关对照几乎一致 |
+| LoRA 叠加的上限 | 轻档 1.0/0.7/0.4 vs 过载档 1.6/1.3/1.0 | 过载档质感上一档，但**自动加设定外细节**（耳饰、帽徽、胸口纹样）、脸型变尖 |
+| 重风格档能不能拍全景 | 同一句构图锚点，三档各跑 | 轻档全身成立；过载档**连试三次**都收成半身，加 low angle、加负面排除均无效 → 「风格强度会抢构图」 |
+| Detailer_Beauty 是什么 | 同 seed on/off | 是**美颜**（皮肤更平、腮红更显、唇更饱满），不是加细节 |
+| 本地与云端是不是一回事 | 云节点执行 | 不是：云节点要 Comfy 账号登录，否则 Unauthorized: Please login first to use this node. |
+
+- 新增：skills/krea2-local/SKILL.md、eferences/lora-stacking.md、eferences/model-sources.md。
+- 改到：skills/character-design/references/framing-lock.md 追加「风格强度也会抢构图」一节；README.md 目录加一行。
+- 顺带记录的可达性：modelscope.cn 18.6 MB/s、hf-mirror.com 可用；civitai.com / seaart.* / 	ensor.art 本机不可达；Civitai 删档模型可经 civarchive.com 取 sha256 再对 HF 归档库。
+
 ## 2026-11-19（第二批：把文档里所有「推断/单次观察」跑成实测）
 
 **11 个渲染实验，逐条改口；没复现的就降级，不硬撑。**

@@ -8,6 +8,7 @@
 |---|---|---|
 | `character-design` | 把「想要这种感觉」翻译成可复现的人像提示词，产出半写实 3D CG 日系少女 | [SKILL.md](skills/character-design/SKILL.md) ｜ [零基础手册](skills/character-design/docs/README.md) |
 | `h3-image-workflow` | 把 MiniMax H3 的「参考图 → 新图」接对：锁身份、换机位、照片翻 CG，以及那个会让构图钉死的坑 | [SKILL.md](skills/h3-image-workflow/SKILL.md) ｜ [零基础手册](skills/h3-image-workflow/docs/README.md) |
+| `krea2-local` | 在本机 ComfyUI 跑 Krea 2 Turbo（int8），用 STYLE 措辞定画风、用 LoRA 叠电影感，并知道什么强度会翻车 | [SKILL.md](skills/krea2-local/SKILL.md) |
 
 ## 怎么用
 
