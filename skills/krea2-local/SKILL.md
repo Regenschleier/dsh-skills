@@ -5,7 +5,7 @@ description: 在本机 ComfyUI 上跑 Krea 2 Turbo（int8）出图，并叠多�
 
 # Krea 2 Turbo（本地 int8）出图与 LoRA 叠加
 
-这份手册只讲**本机已验证**的链路：ComfyUI 本地后端 + `krea2_turbo_int8_convrot` + Qwen3-VL 文本编码器 + Qwen-Image VAE。云端 `Krea2StyleReferenceNode` 是另一条链路，权限和结果都不一样，见第五节。
+这份手册只讲**本机已验证**的链路：ComfyUI 本地后端 + `krea2_turbo_int8_convrot` + Qwen3-VL 文本编码器 + Qwen-Image VAE。全部离线可跑，不用登录、不扣额度。
 
 ## 一、先记住三件事
 
@@ -61,29 +61,18 @@ NEG 段     —— 只放真正要压掉的东西
 2. 主风格 1.4 以上开始自作加饰物；1.6 已在换脸边缘。
 3. 滑块类 LoRA（brightness/light slider）全场只留一个，否则互相抵消。
 
-## 五、本地 vs 云：两条链路，别混
-
-| | 本地 int8 | 云端 `Krea2StyleReferenceNode` / `Krea2ImageNode` |
-|---|---|---|
-| 权限 | 无需登录 | **必须**在 ComfyUI 桌面端登录 Comfy 账号，否则 `Unauthorized: Please login first to use this node.` |
-| 参考图 | 走 CLIP 视觉 token，锁构图与介质 | 上传到 ComfyAPI 存储，当 URL 传给模型 |
-| 默认画风 | 纯文字容易落回动漫插画 | 更接近用户在外面看到的「半写实 3D」 |
-| 成本 | 本地算力 | 走 Comfy 额度 |
-
-用户说「怎么变画风了」时，先问清那张是本地还是云出的——两边同 seed 同提示词也不是一个东西。
-
-## 六、UI 工作流的两个坑
+## 五、UI 工作流的两个坑
 
 1. **工作流必须放服务器真正的 user 目录**：`ComfyUI-Installs\ComfyUI\ComfyUI\user\default\workflows\`。放 `ComfyUI-Shared\user\default\workflows\` 会 404（`/api/userdata?dir=workflows` 返回 `[]`）。
 2. **手写 UI 格式 JSON 时，links 表要先分配 id 再回填** `inputs.link` / `outputs.links`；用 `lid - N` 这类算术会错位（实测抓到 7 处错连）。写完用 `app.loadGraphData(data)` 载入 + 读 `graph._nodes` 的连线数自检，再点运行。
 
-## 七、模型从哪来（详见 `references/model-sources.md`）
+## 六、模型从哪来（详见 `references/model-sources.md`）
 
 - 官方 11 个 Krea2 LoRA：ModelScope `Comfy-Org/Krea-2/loras/`（每个约 447 MB，含 darkbrush / neondrip / retroanime / softwatercolor / style_reference 等）。
 - 社区 LoRA：`hf-mirror.com` 可直连；Civitai 删档的模型可经 `civarchive.com` 找到 sha256 → 再对上 HF 的 `k2loras/krea2-lora-archive` 镜像路径。
 - `seaart.ai` / `tensor.art` / `civitai.com` 本机不可直连，模型页打开即超时；这两家的独占 LoRA 只能靠人肉转存（微信文件传输助手最快）。
 
-## 八、交付检查
+## 七、交付检查
 
 出完图先自问四句：
 1. 角色还是她吗（脸型、发色、眼睛没被 LoRA 改掉）？
