@@ -125,3 +125,20 @@ ample space above the head and below the feet, vertical composition.
 本页所有对照都用同一张图跑的，那张图的唯一存档在 `h3-image-workflow` skill 里，不在这里重复第二份。
 要复现，改三处即可：提示词段（换成上面对照里的写法）、`noise_seed`、`filename_prefix`；
 带参考图与不带参考图的开关也在那份文件里写着。
+
+## 追加：风格强度也会抢构图（2026-11-23，Krea2 链路实测）
+
+上面讲的是「参考图会钉死构图」。还有一个同样硬的变量：**LoRA 风格强度**。
+
+同一句构图锚点（`her whole figure from beanie to boots fits inside the frame, head near the top fifth,
+boots touching the bottom fifth`），同一 seed 家族、同一提示词，只改 LoRA 权重：
+
+| 配置 | 结果 |
+|---|---|
+| `style_reference 0.9 / 主风格 1.0 / 细节 0.7 / 小风格 0.4` | 全身成立（靴底略裁） |
+| `style_reference 0.9 / 主风格 1.6 / 细节 1.3 / 小风格 1.0` | 连试三次都收成半身/大腿以上；加 `low angle`、加负面 `no close-up, cropped boots` 均无效 |
+
+结论：**风格越重，构图锚点越不服从**。要全身/大场景就别开重档；要重档就默认只能给近景与半身。
+这条与「参考图钉死构图」是两个独立变量，可以叠加：参考图 + 重档 = 构图基本由模型自己决定。
+
+完整档位与复现命令见 `skills/krea2-local/references/lora-stacking.md`。
